@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     public float jumpForce;
     private int maxNumJumps;
     private int numJumps;
+
+    public GameObject doubleJumpHatLocation;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -68,8 +70,15 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision) {
         //double jump
         if(collision.gameObject.CompareTag("PinkCollectible")) {
+            GameObject hat = collision.gameObject;
+            equipDoubleJumpHat(hat);
             maxNumJumps = 2;
         }
+    }
+
+    private void equipDoubleJumpHat(GameObject hat) {
+        hat.transform.position = doubleJumpHatLocation.transform.position;
+        hat.gameObject.transform.SetParent(this.gameObject.transform);
     }
 
 }
