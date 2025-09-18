@@ -9,8 +9,4 @@ public class PinkTriangleCollectible : MonoBehaviour
         }
     }
 
-    public string getTestString() {
-        test = "Hello from pink collectible";
-        return test;
-    }
 }

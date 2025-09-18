@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ground
   - PinkCollectible
+  - WallMoveLeftBound
+  - WallMoveRightBound
   layers:
   - Default
   - TransparentFX

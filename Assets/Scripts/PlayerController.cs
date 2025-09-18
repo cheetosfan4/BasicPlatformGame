@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
         //this script is also attached to the player
         rb = GetComponent<Rigidbody2D>();
         maxNumJumps = 1;
-        numJumps = maxNumJumps;
+        numJumps = 1;
     }
 
     // Update is called once per frame
@@ -60,15 +60,15 @@ public class PlayerController : MonoBehaviour
         //collision will contain information about the object that the player collided with
         //Debug.Log(collision.gameObject);
         if(collision.gameObject.CompareTag("Ground")) {
-            numJumps = maxNumJumps;
+            numJumps = 1;
         }
     }
 
     //Triggers
     private void OnTriggerEnter2D(Collider2D collision) {
+        //double jump
         if(collision.gameObject.CompareTag("PinkCollectible")) {
-            string fromPinkCollectible = collision.gameObject.GetComponent<PinkTriangleCollectible>().getTestString();
-            Debug.Log(fromPinkCollectible);
+            maxNumJumps = 2;
         }
     }
 
