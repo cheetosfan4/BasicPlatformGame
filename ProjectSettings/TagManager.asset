@@ -8,6 +8,8 @@ TagManager:
   - PinkCollectible
   - WallMoveLeftBound
   - WallMoveRightBound
+  - Boundary
+  - BoundaryBottom
   layers:
   - Default
   - TransparentFX

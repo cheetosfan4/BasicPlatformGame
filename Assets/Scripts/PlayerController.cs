@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -63,6 +64,9 @@ public class PlayerController : MonoBehaviour
         //Debug.Log(collision.gameObject);
         if(collision.gameObject.CompareTag("Ground")) {
             numJumps = 1;
+        }
+        else if (collision.gameObject.CompareTag("BoundaryBottom")) {
+            SceneManager.LoadScene("SampleScene");
         }
     }
 
