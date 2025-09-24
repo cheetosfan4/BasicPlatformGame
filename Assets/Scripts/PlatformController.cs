@@ -5,6 +5,7 @@ public class PlatformController : MonoBehaviour
     public float movementSpeed;
     public bool horizontalMovement;
     public bool verticalMovement;
+    private Vector3 lastPlatformPos;
 
     private bool moveLeft;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -44,13 +45,23 @@ public class PlatformController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision) {
         if(collision.gameObject.CompareTag("Player")) {
-            collision.gameObject.transform.SetParent(gameObject.transform);
+            //collision.gameObject.transform.SetParent(gameObject.transform);
+            lastPlatformPos = transform.position;
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision) {
+        if (collision.gameObject.CompareTag("Player")) {
+            Vector3 delta = transform.position - lastPlatformPos;
+            collision.gameObject.transform.position += delta;
+            lastPlatformPos = transform.position;
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision) {
         if(collision.gameObject.CompareTag("Player")) {
-            collision.gameObject.transform.SetParent(null);
+            //collision.gameObject.transform.SetParent(null);
+            lastPlatformPos = Vector3.zero;
         }
     }
 

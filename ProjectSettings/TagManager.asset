@@ -10,6 +10,7 @@ TagManager:
   - WallMoveRightBound
   - Boundary
   - BoundaryBottom
+  - FinsCollectible
   layers:
   - Default
   - TransparentFX

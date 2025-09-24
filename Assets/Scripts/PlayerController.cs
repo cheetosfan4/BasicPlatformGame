@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,11 +8,13 @@ public class PlayerController : MonoBehaviour
     private float inputHorizontal;
     //because this is public we have access to it in the unity editor
     public float horizontalMoveSpeed;
+    public float swimSpeed;
     public float jumpForce;
     private int maxNumJumps;
     private int numJumps;
+    private bool swim = false;
 
-    public GameObject doubleJumpHatLocation;
+    //public GameObject doubleJumpHatLocation;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -26,6 +29,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         movePlayerLateral();
+        rotatePlayer();
         jump();
     }
 
@@ -36,9 +40,19 @@ public class PlayerController : MonoBehaviour
         //0 - no button pressed
         //1 - right arrow or d pressed
         //2 - left arrow or a pressed.
+        if (!swim) {
+            inputHorizontal = Input.GetAxisRaw("Horizontal");
+            flipPlayerSprite(inputHorizontal);
+            rb.linearVelocity = new Vector2(horizontalMoveSpeed * inputHorizontal, rb.linearVelocity.y);
+        }
+    }
+
+    private void rotatePlayer() {
+        rb.angularVelocity = 0;
         inputHorizontal = Input.GetAxisRaw("Horizontal");
-        flipPlayerSprite(inputHorizontal);
-        rb.linearVelocity = new Vector2(horizontalMoveSpeed * inputHorizontal, rb.linearVelocity.y);
+        if (swim) {
+            rb.rotation += (-inputHorizontal * swimSpeed);
+        }
     }
 
     private void flipPlayerSprite(float inputHorizontal) {
@@ -52,9 +66,13 @@ public class PlayerController : MonoBehaviour
     }
 
     private void jump() {
-        if (Input.GetKeyDown(KeyCode.Space) && numJumps <= maxNumJumps) {
+        if (Input.GetKeyDown(KeyCode.Space) && numJumps <= maxNumJumps && !swim) {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             numJumps++;
+        }
+        else if (Input.GetKey(KeyCode.Space) && swim) {
+            Vector2 direction = transform.right;
+            rb.linearVelocity = direction * horizontalMoveSpeed;
         }
     }
 
@@ -75,14 +93,29 @@ public class PlayerController : MonoBehaviour
         //double jump
         if(collision.gameObject.CompareTag("PinkCollectible")) {
             GameObject hat = collision.gameObject;
-            equipDoubleJumpHat(hat);
+            equipItem(hat);
             maxNumJumps = 2;
+        }
+        //fins
+        if(collision.gameObject.CompareTag("FinsCollectible")) {
+            GameObject fins = collision.gameObject;
+            equipItem(fins);
+            rb.freezeRotation = false;
+            rb.gravityScale = 0;
+            swim = true;
         }
     }
 
-    private void equipDoubleJumpHat(GameObject hat) {
-        hat.transform.position = doubleJumpHatLocation.transform.position;
-        hat.gameObject.transform.SetParent(this.gameObject.transform);
+    private void equipItem(GameObject item) {
+
+        item.transform.position = this.gameObject.transform.position;
+        item.gameObject.transform.SetParent(this.gameObject.transform);
+        if (inputHorizontal > 0) {
+            item.transform.eulerAngles = new Vector3(0, 0, 0);
+        }
+        else if (inputHorizontal < 0) {
+            item.transform.eulerAngles = new Vector3(0, 180, 0);
+        }
     }
 
 }
